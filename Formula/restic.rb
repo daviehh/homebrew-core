@@ -4,6 +4,7 @@ class Restic < Formula
   url "https://github.com/restic/restic/archive/v0.9.5.tar.gz"
   sha256 "e22208e946ede07f56ef60c1c89de817b453967663ce4867628dff77761bd429"
   head "https://github.com/restic/restic.git"
+  revision 1
 
   bottle do
     cellar :any_skip_relocation
@@ -11,13 +12,14 @@ class Restic < Formula
     sha256 "1775322bbdcd094cd3cded9097b5e07588fdd4c40e447fd2db319e37e8f2704e" => :high_sierra
     sha256 "450abee766d22cd546b03beac010cef7e9b268aa0f9a223519697e3660985805" => :sierra
   end
-
+  
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = HOMEBREW_CACHE/"go_cache"
+    ENV["CGO_ENABLED"] = "1"
 
-    system "go", "run", "build.go"
+    system "go", "run", "build.go", "--enable-cgo"
 
     mkdir "completions"
     system "./restic", "generate", "--bash-completion", "completions/restic"
